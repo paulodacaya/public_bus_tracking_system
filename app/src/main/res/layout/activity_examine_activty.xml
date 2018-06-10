@@ -1,0 +1,168 @@
+<?xml version="1.0" encoding="utf-8"?>
+<android.support.constraint.ConstraintLayout
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    tools:context=".ui.ExamineActivity">
+
+    <ImageView
+        android:id="@+id/backgroundImage"
+        android:layout_width="0dp"
+        android:layout_height="70dp"
+        android:src="@color/colorPrimary"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent" />
+
+    <ImageView
+        android:id="@+id/pbtLogoImage"
+        android:layout_width="55dp"
+        android:layout_height="0dp"
+        android:layout_marginStart="10dp"
+        android:src="@drawable/pbt_logo_letters_white_small"
+        app:layout_constraintBottom_toBottomOf="@+id/backgroundImage"
+        app:layout_constraintStart_toStartOf="@+id/backgroundImage"
+        app:layout_constraintTop_toTopOf="@+id/backgroundImage" />
+
+    <TextView
+        android:id="@+id/examineLabel"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginStart="12dp"
+        android:text="Further Examination"
+        android:textColor="@color/colorAccentLight"
+        android:textSize="18sp"
+        android:textStyle="bold"
+        app:layout_constraintBottom_toBottomOf="@+id/backgroundImage"
+        app:layout_constraintStart_toEndOf="@+id/pbtLogoImage"
+        app:layout_constraintTop_toTopOf="parent" />
+
+    <LinearLayout
+        android:id="@+id/linearLayout2"
+        android:layout_width="0dp"
+        android:layout_height="wrap_content"
+        android:layout_marginEnd="16dp"
+        android:layout_marginStart="16dp"
+        android:layout_marginTop="16dp"
+        android:orientation="horizontal"
+        android:weightSum="2"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/backgroundImage">
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:layout_weight="1"
+            android:orientation="vertical"
+            android:showDividers="none|beginning">
+
+            <TextView
+                android:id="@+id/dateLabel"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginBottom="10dp"
+                android:text="Date (UTC)"
+                android:textColor="@color/colorSecondary"
+                android:textStyle="bold"
+                tools:text="Date (UTC)" />
+
+            <TextView
+                android:id="@+id/stopLabel"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginBottom="10dp"
+                android:text="Stop"
+                android:textColor="@color/colorSecondary"
+                android:textStyle="bold"
+                tools:text="Stop" />
+
+            <TextView
+                android:id="@+id/scheduledTimeLabel"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginBottom="10dp"
+                android:text="Scheduled Time (UTC)"
+                android:textColor="@color/colorSecondary"
+                android:textStyle="bold"
+                tools:text="Scheduled Time (UTC)" />
+
+            <TextView
+                android:id="@+id/arrivalTimeLabel"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginBottom="10dp"
+                android:text="Arrival Time (UTC)"
+                android:textColor="@color/colorSecondary"
+                android:textStyle="bold"
+                tools:text="Arrival Time (UTC)" />
+
+            <TextView
+                android:id="@+id/timeDifferenceLabel"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:text="Time Difference"
+                android:textColor="@color/colorSecondary"
+                android:textStyle="bold"
+                tools:text="Time Difference" />
+        </LinearLayout>
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:layout_weight="1"
+            android:orientation="vertical">
+
+            <TextView
+                android:id="@+id/dateText"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginBottom="10dp"
+                tools:text="2018-05-01" />
+
+            <TextView
+                android:id="@+id/stopText"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginBottom="10dp"
+                tools:text="Flintoff Ave/Kelly Ave" />
+
+            <TextView
+                android:id="@+id/scheduledTimeText"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginBottom="10dp"
+                tools:text="01:04:00" />
+
+            <TextView
+                android:id="@+id/arrivalTimeText"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginBottom="10dp"
+                tools:text="01:01:02" />
+
+            <TextView
+                android:id="@+id/timeDifferenceText"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                tools:text="4m 15s LATE" />
+        </LinearLayout>
+    </LinearLayout>
+
+    <Button
+        android:id="@+id/deleteDataPointButton"
+        android:layout_width="wrap_content"
+        android:layout_height="30dp"
+        android:layout_marginStart="16dp"
+        android:layout_marginTop="16dp"
+        android:background="@drawable/bg_roundedstroke_black"
+        android:paddingLeft="10dp"
+        android:paddingRight="10dp"
+        android:text="Delete Data Point"
+        android:textAllCaps="false"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/linearLayout2" />
+
+</android.support.constraint.ConstraintLayout>

@@ -1,0 +1,102 @@
+<?xml version="1.0" encoding="utf-8"?>
+<android.support.constraint.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:id="@+id/mapConstraintLayout"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent">
+
+    <fragment
+        android:id="@+id/map"
+        android:name="com.google.android.gms.maps.SupportMapFragment"
+        android:layout_width="0dp"
+        android:layout_height="0dp"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@id/backgroundImage"
+        tools:context=".ui.DriverMapsActivity" />
+
+    <ImageView
+        android:id="@+id/backgroundImage"
+        android:layout_width="0dp"
+        android:layout_height="70dp"
+        android:src="@color/colorPrimary"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent" />
+
+    <ImageView
+        android:id="@+id/pbtLogoImage"
+        android:layout_width="55dp"
+        android:layout_height="0dp"
+        android:layout_marginStart="10dp"
+        android:src="@drawable/pbt_logo_letters_white_small"
+        app:layout_constraintBottom_toBottomOf="@+id/backgroundImage"
+        app:layout_constraintStart_toStartOf="@+id/backgroundImage"
+        app:layout_constraintTop_toTopOf="@+id/backgroundImage" />
+
+    <Button
+        android:id="@+id/endShiftButton"
+        android:layout_width="100dp"
+        android:layout_height="30dp"
+        android:layout_marginEnd="10dp"
+        android:background="@drawable/bg_rounded_orange"
+        android:text="end shift"
+        android:textColor="@color/colorAccentLight"
+        android:textStyle="bold"
+        app:layout_constraintBottom_toBottomOf="@+id/backgroundImage"
+        app:layout_constraintEnd_toEndOf="@+id/backgroundImage"
+        app:layout_constraintTop_toTopOf="@+id/backgroundImage" />
+
+    <TextView
+        android:id="@+id/busNumberLabel"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="14dp"
+        android:textColor="@color/colorAccentLight"
+        android:textSize="18sp"
+        android:textStyle="bold"
+        app:layout_constraintEnd_toStartOf="@+id/endShiftButton"
+        app:layout_constraintHorizontal_bias="0.494"
+        app:layout_constraintStart_toEndOf="@+id/pbtLogoImage"
+        app:layout_constraintTop_toTopOf="@+id/backgroundImage"
+        tools:text="Bus 456" />
+
+    <ImageView
+        android:id="@+id/deltaBackgroundImage"
+        android:layout_width="72dp"
+        android:layout_height="50dp"
+        android:src="@drawable/bg_rounded_black"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/backgroundImage" />
+
+    <TextView
+        android:id="@+id/deltaValue"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginBottom="8dp"
+        android:text="0.0"
+        android:textColor="@color/colorAccentLight"
+        android:textSize="18sp"
+        app:layout_constraintBottom_toBottomOf="@+id/deltaBackgroundImage"
+        app:layout_constraintEnd_toEndOf="@+id/deltaBackgroundImage"
+        app:layout_constraintStart_toStartOf="@id/deltaBackgroundImage"
+        app:layout_constraintTop_toTopOf="@+id/deltaBackgroundImage"
+        app:layout_constraintVertical_bias="0.533"
+        tools:text="0.0" />
+
+    <TextView
+        android:id="@+id/stopNameLabel"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="-----------"
+        android:textColor="@color/colorAccentLight"
+        android:textSize="10sp"
+        app:layout_constraintEnd_toEndOf="@+id/busNumberLabel"
+        app:layout_constraintHorizontal_bias="0.478"
+        app:layout_constraintStart_toStartOf="@+id/busNumberLabel"
+        app:layout_constraintTop_toBottomOf="@+id/busNumberLabel"
+        tools:text="Albion Railway Station/Ballarat Rd" />
+
+</android.support.constraint.ConstraintLayout>
