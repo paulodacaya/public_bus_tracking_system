@@ -1,4 +1,4 @@
-![pbt_logo_extended_white](https://user-images.githubusercontent.com/29850088/41199878-1495b7a6-6cdd-11e8-9c2e-5a4432348f64.png)
+![map_bus_icon](https://user-images.githubusercontent.com/29850088/41200285-361e3d1e-6ce5-11e8-9ed6-71ce8d02a251.png)
 # Public Bus Tracker
 ## Background
 This was a University project for a course named 'Mobile Computing'. The course coordinator was Dr. Pj Radcliffe and the senior tutor was Mr. Tyler Steane.
