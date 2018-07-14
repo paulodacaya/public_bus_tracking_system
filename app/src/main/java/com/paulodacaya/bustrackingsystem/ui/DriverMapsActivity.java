@@ -35,6 +35,7 @@ import com.paulodacaya.bustrackingsystem.database.DatabaseHandler;
 import com.paulodacaya.bustrackingsystem.database.StopData;
 import com.paulodacaya.bustrackingsystem.timetable.Stop;
 import com.paulodacaya.bustrackingsystem.timetable.Timetable;
+import com.paulodacaya.bustrackingsystem.ui.fragments.AlertDialogFragment;
 import com.paulodacaya.bustrackingsystem.utilities.Constants;
 
 import org.json.JSONArray;
@@ -86,9 +87,9 @@ public class DriverMapsActivity extends FragmentActivity implements
   private String mCurrentUTCDate;
   private String mCurrentUTCTime;
 
-  private int mTotalOnTimeTaps;
-  private int mTotalTaps;
-  private boolean mIsFirstTapped;
+  private int mTotalOnTimeTaps = 0;
+  private int mTotalTaps = 1; // cannot divide by zero
+  private boolean mIsFirstTapped = false;
 
   // DATABASE
   DatabaseHandler mDataBase;
@@ -114,24 +115,18 @@ public class DriverMapsActivity extends FragmentActivity implements
     mBusNumberLabel.setText( "Bus " + mBusNumber );  // set bus number label
     //----------------------------------------------------------------------------------------------
 
-    // / initialise values
-    mTotalOnTimeTaps = 0; // cannot divide by zero
-    mTotalTaps = 1;
-    mIsFirstTapped = false;
-
     // create database object with table name
     // NOTE: IF database already exist: new table will NOT be created.
     final String tableName = "Bus_" + mBusNumber;
     mDataBase = new DatabaseHandler( this, tableName );
 
-    // create table if table does NOT exist
+    // Dynamically create table if route has not been selected
     if( !mDataBase.isTableNameExist( tableName ) ) {
       mDataBase.createTable( tableName );
     }
 
     try {
-      // get all bus stop locations from specified information
-      getBusRouteStopLocations(); // get JSON data and display on MAP
+      getBusRouteStopLocations();
     } catch (NoSuchAlgorithmException error) {
       error.printStackTrace();
     } catch (InvalidKeyException error) {
@@ -142,9 +137,9 @@ public class DriverMapsActivity extends FragmentActivity implements
   @Override
   protected void onResume() {
     super.onResume();
+
     /**
      * During Driver shift, only need writable access.
-     * Open during Resume method.
      * onResume() gets called after onCreate() and when the activity is re-entered.
      */
     mDataBase.openWritableAccess();
@@ -161,17 +156,18 @@ public class DriverMapsActivity extends FragmentActivity implements
   public void onMapReady(GoogleMap googleMap) {
     mMap = googleMap;
 
-    mLocationManager = (LocationManager) this.getSystemService( LOCATION_SERVICE ); // instantiate LocationManager
-    mMap.setOnMarkerClickListener( this );     // register the clicks on the marker to run call backs
-
-    // handle location when the location is updated
+    mLocationManager = (LocationManager) this.getSystemService( LOCATION_SERVICE );
+    mMap.setOnMarkerClickListener( this );
+    
     mLocationListener = new LocationListener() {
       @Override
       public void onLocationChanged(Location location) {
-
-        // remove current marker and replace it with new marker.
-        // current marker needs to get removed unless it will stack markers on.
-        /** Uncomment to activate */
+  
+        /**
+         * Location updates are disabled to test marker clicks
+         * Uncommenting will constantly update position for real-time testing
+         * */
+        
         // mCurrentLocationMarker.remove();
         // setCurrentLocationOnMap( location );
       }
@@ -192,19 +188,15 @@ public class DriverMapsActivity extends FragmentActivity implements
       }
     };
 
-
-    // check if this app has existing permissions
+    
     if (ActivityCompat.checkSelfPermission(this, Manifest.permission.ACCESS_FINE_LOCATION) != PackageManager.PERMISSION_GRANTED
             && ActivityCompat.checkSelfPermission(this, Manifest.permission.ACCESS_COARSE_LOCATION) != PackageManager.PERMISSION_GRANTED) {
-
-      // it goes here if it doesn't have permission, so we request permission
+      
       ActivityCompat.requestPermissions(this, new String[]{Manifest.permission.ACCESS_FINE_LOCATION}, 1);
     } else {
-
-      // we already had permission, so this block runs, requesting location updates with minimum delays
+      
       mLocationManager.requestLocationUpdates(LocationManager.GPS_PROVIDER, 0, 0, mLocationListener);
-
-      // get current location of device and put on map
+      
       Location location = mLocationManager.getLastKnownLocation(LocationManager.GPS_PROVIDER);
       setCurrentLocationOnMap( location );
     }
@@ -213,9 +205,6 @@ public class DriverMapsActivity extends FragmentActivity implements
   @Override
   public void onRequestPermissionsResult(int requestCode, @NonNull String[] permissions, @NonNull int[] grantResults) {
     super.onRequestPermissionsResult(requestCode, permissions, grantResults);
-
-    // this gets called after answering the dialog that pops up from a user permission request
-    // it checks if the permission was granted, if yes, location is requested
 
     if( grantResults.length > 0 && grantResults[0] == PackageManager.PERMISSION_GRANTED) {
       if(ContextCompat.checkSelfPermission(this, Manifest.permission.ACCESS_FINE_LOCATION) == PackageManager.PERMISSION_GRANTED) {
@@ -228,7 +217,8 @@ public class DriverMapsActivity extends FragmentActivity implements
   }
 
   private void setCurrentLocationOnMap( Location location ) {
-    // get current location of device and put on map
+    
+    
     LatLng latLng = new LatLng(location.getLatitude(), location.getLongitude());
 
     // add marker to map and also return that marker to field variable so it can be removed and updated
@@ -248,17 +238,14 @@ public class DriverMapsActivity extends FragmentActivity implements
     String timetableUrl = timetable.buildTTAPIURL();
     Log.v(TAG, timetableUrl);
 
-    final Stop stop = new Stop(); // create a single stop object
-
-
-    // handle network requests
+    final Stop stop = new Stop();
+    
     if( isNetworkAvailable() ) {
 
       OkHttpClient client = new OkHttpClient();
       Request request = new Request.Builder().url(timetableUrl).build();
       Call call = client.newCall(request);
-
-      //execute method on the call class that will return a response object
+      
       call.enqueue(new Callback() {
         @Override
         public void onFailure(Call call, IOException e) {
@@ -274,8 +261,7 @@ public class DriverMapsActivity extends FragmentActivity implements
 
               JSONObject rootObject = new JSONObject( jsonData );
               JSONArray stopsArray = rootObject.getJSONArray( "stops" );
-
-              // loop through each object
+              
               for( int i = 0; i < stopsArray.length(); i++ ) {
                 JSONObject stopObj = stopsArray.getJSONObject( i );
 
@@ -297,16 +283,15 @@ public class DriverMapsActivity extends FragmentActivity implements
                 markerOptions.title( stop.getStopName() );
 
                 markerOptions.position( new LatLng( lat, lon ) ); // set location of marker from OBJ
-                markerOptions.snippet( stop.getStopId() + "" ); // covert int to string
+                markerOptions.snippet( stop.getStopId() + "" );   // convert int to string
 
-                // add circle around marker to represent the radius of connection
+                // Add circle around marker for better visual
                 final CircleOptions circleOptions = new CircleOptions();
                 circleOptions.center( new LatLng( stop.getStopLatitude(), stop.getStopLongitude() ));
                 circleOptions.radius( 11 );
                 circleOptions.strokeWidth( 2f );
                 circleOptions.fillColor( Color.GRAY );
-
-
+                
                 // run Google Map task on main UI thread
                 runOnUiThread(new Runnable() {
                   @Override
@@ -433,35 +418,35 @@ public class DriverMapsActivity extends FragmentActivity implements
 
             if (response.isSuccessful()) {
 
-              /** WHERE THE MAGIC HAPPENS - STORING DATA */
+              /** STORING DATA */
               //------------------------------------------------------------------------------------
-              // get scheduled time at a specific bus stop at a specific time.
+              // get scheduled time at a specific bus stop at a specific time
               mScheduledUTC = getScheduledUTC( jsonData );
 
-              // get current and schedule date in millis
+              // get current and schedule date in milliseconds
               long currentTimeUTCMillis = getCurrentUTCTimeMillis();
               long scheduledTimeUTCMillis = getUTCTimeMillis( mScheduledUTC );
 
               // get scheduled UTC time
               mScheduledUTCTime = getScheduledUTCTime( mScheduledUTC );
 
-              // calculate delta :)
+              // Calculate delta
               long deltaMillis = currentTimeUTCMillis - scheduledTimeUTCMillis;
 
-              // get time seconds, absolute value to remove negative sign
+              // Get time seconds, absolute value to remove negative sign
               final int deltaSeconds = Math.abs( (int) ( ( deltaMillis/1000)%60 ) );
 
-              // get time in minutes
+              // Get time in minutes
               final long deltaMinutes = ( (deltaMillis / 1000)-deltaSeconds )/60;
 
-              // get total time.
+              // Get total time
               final float deltaTotal = Float.parseFloat( deltaMillis + "." + deltaSeconds );
 
-
+              // Create object to store data in SQLite database
               StopData stopData = new StopData(mCurrentUTCDate, mStopNameLabel.getText().toString(),
                       mScheduledUTCTime, mCurrentUTCTime, deltaMillis);
 
-              mDataBase.addBusStopData( stopData ); // add data to database :)
+              mDataBase.addBusStopData( stopData ); // add data to database
 
               // update main UI with latest information
               runOnUiThread(new Runnable() {
@@ -474,7 +459,7 @@ public class DriverMapsActivity extends FragmentActivity implements
                     mTotalTaps++;
 
                   // update UI with delta information
-                  mDeltaValueLabel.setText( deltaMinutes + "." + deltaSeconds );
+                  mDeltaValueLabel.setText( deltaMinutes + ":" + deltaSeconds );
 
                   // set color depending if 'on time', 5 minute clearance
                   if( deltaTotal >= -5 && deltaTotal <= 5 ) {
@@ -562,6 +547,6 @@ public class DriverMapsActivity extends FragmentActivity implements
     intent.putExtra( Constants.TOTAL_ON_TIME_TAPS, mTotalOnTimeTaps );
     intent.putExtra( Constants.TOTAL_TAPS, mTotalTaps );
     startActivity( intent );
-    finish(); // remove activity from stack
+    finish();
   }
 }

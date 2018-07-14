@@ -62,7 +62,7 @@ public class Timetable {
   // Build URI for departure time for a specific stop, with a max result of 8 (show follow 8 stops)
   public void setDeparturesForStopUri( String stopId, String fullUTC ) {
 
-    //Convert fullUTC to a format that URI can read, replace ":" with "%3A".
+    //Convert fullUTC to a format that URI can read, replace ":" with "%3A"
     fullUTC = fullUTC.replaceAll( ":", "%3A" );
 
     mUri = "/v3/departures/route_type/2/stop/" + stopId + "?date_utc=" + fullUTC + "&max_results=8";
@@ -73,10 +73,9 @@ public class Timetable {
     mUri =  "/v3/directions/route/" + routeId;
   }
 
+  
 
-
-
-
+  // Code obtained from PTV website
   public String buildTTAPIURL() throws NoSuchAlgorithmException, InvalidKeyException {
 
       String HMAC_SHA1_ALGORITHM = "HmacSHA1";

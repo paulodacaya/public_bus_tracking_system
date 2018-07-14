@@ -74,7 +74,20 @@ public class ExamineActivity extends AppCompatActivity {
     String timeDifferenceText = deltaMinutes + "m " + deltaSeconds + "s " + lateEarly;
     mTimeDifferentText.setText( timeDifferenceText ); // set delta time
   }
-
+  
+  /**
+   * ISSUE:
+   * When deleting data point, it removes it from the database table. However,
+   * the X-axis custom formatter is dependent on the ascending order of data points from 1, 2, 3...
+   * to successfully display x-axis as date values e.g. 2018-05-11.
+   * Deleting a data point will obscure the ascending data and result in a NullPointerException.
+   *
+   * POSSIBLE SOLUTIONS but have not been implemented:
+   * * Completely remove X-axis formatter and just display single digit values, though it
+   *   doesn't read as expected
+   *
+   * * Create a new table, copy values over with correct ascending values and delete previous table.
+   * */
   @OnClick ( R.id.deleteDataPointButton )
   public void deleteDataPoint() {
 

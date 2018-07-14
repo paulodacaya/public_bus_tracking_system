@@ -40,124 +40,146 @@
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toBottomOf="@+id/contentTitle" />
 
-    <ImageView
-        android:id="@+id/infoPromptImage"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        app:srcCompat="@drawable/info_prompt"
-        android:layout_marginTop="32dp"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@id/subContentTitle"
-        tools:layout_editor_absoluteX="85dp"
-        tools:layout_editor_absoluteY="86dp" />
 
-    <LinearLayout
-        android:id="@+id/homePageContent"
-        android:layout_width="0dp"
+    <android.support.constraint.ConstraintLayout
+        android:id="@+id/driverHomeBody"
+        android:layout_width="match_parent"
         android:layout_height="0dp"
-        android:layout_marginEnd="32dp"
-        android:layout_marginStart="32dp"
-        android:layout_marginTop="32dp"
-        android:orientation="vertical"
-        app:layout_constraintBottom_toBottomOf="parent"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@id/infoPromptImage">
-
-        <TextView
-            android:id="@+id/homPageContentTitle1"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:text="@string/my_shift_content_title_1"
-            android:textColor="@color/colorSecondary"
-            android:textSize="18sp"
-            android:textStyle="bold" />
-
-        <TextView
-            android:id="@+id/homePageContentBody1"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:text="@string/my_shift_content_body_1" />
-
-
-    </LinearLayout>
-
-    <ImageView
-        android:id="@+id/searchBackgroundImage"
-        android:layout_width="0dp"
-        android:layout_height="70dp"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/subContentTitle"
-        app:srcCompat="@color/colorPrimary" />
-
-    <EditText
-        android:id="@+id/searchText"
-        android:layout_width="0dp"
-        android:layout_height="wrap_content"
-        android:layout_marginBottom="16dp"
-        android:layout_marginEnd="10dp"
-        android:layout_marginStart="10dp"
-        android:layout_marginTop="16dp"
-        android:background="@drawable/bg_rounded_white"
-
-        android:ems="10"
-        android:hint="Enter bus number"
-        android:inputType="number"
-        android:paddingBottom="6dp"
-        android:paddingLeft="5dp"
-        android:paddingTop="6dp"
-        android:textColor="@color/colorDefaultText"
-        android:textSize="14sp"
-        app:layout_constraintBottom_toBottomOf="@+id/searchBackgroundImage"
-        app:layout_constraintEnd_toStartOf="@+id/searchIconImage"
-        app:layout_constraintStart_toStartOf="@+id/searchBackgroundImage"
-        app:layout_constraintTop_toTopOf="@+id/searchBackgroundImage" />
-
-    <ImageView
-        android:id="@+id/searchIconImage"
-        android:layout_width="30dp"
-        android:layout_height="30dp"
-        android:layout_marginBottom="8dp"
-        android:layout_marginEnd="10dp"
-        android:layout_marginTop="8dp"
-        app:layout_constraintBottom_toBottomOf="@+id/searchBackgroundImage"
-        app:layout_constraintEnd_toEndOf="@+id/searchBackgroundImage"
-        app:layout_constraintTop_toTopOf="@+id/searchBackgroundImage"
-        app:srcCompat="@drawable/icon_search" />
-
-    <android.support.v7.widget.RecyclerView
-        android:id="@+id/searchRecyclerView"
-        android:layout_width="0dp"
-        android:layout_height="0dp"
-        app:layout_constraintBottom_toBottomOf="parent"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/searchBackgroundImage" >
-
-    </android.support.v7.widget.RecyclerView>
-
-    <ImageView
-        android:id="@+id/notFoundPromptImage"
-        android:layout_width="200dp"
-        android:layout_height="200dp"
-        app:layout_constraintBottom_toBottomOf="parent"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toBottomOf="@id/subContentTitle"
-        app:srcCompat="@drawable/notfound_prompt" />
+        app:layout_constraintBottom_toBottomOf="parent">
 
-    <ProgressBar
-        android:id="@+id/progressBar"
-        style="?android:attr/progressBarStyle"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:indeterminateTint="@color/colorPrimary"
-        android:indeterminateTintMode="src_in"
-        app:layout_constraintBottom_toBottomOf="parent"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@id/searchBackgroundImage" />
+        <ImageView
+            android:id="@+id/infoPromptImage"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            app:srcCompat="@drawable/info_prompt"
+            android:layout_marginTop="32dp"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toTopOf="parent" />
+
+        <ScrollView
+            android:layout_width="match_parent"
+            android:layout_height="0dp"
+            app:layout_constraintTop_toBottomOf="@id/infoPromptImage"
+            app:layout_constraintBottom_toBottomOf="parent">
+
+        <LinearLayout
+            android:id="@+id/homePageContent"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:layout_marginEnd="32dp"
+            android:layout_marginStart="32dp"
+            android:layout_marginTop="32dp"
+            android:orientation="vertical">
+
+            <TextView
+                android:id="@+id/homPageContentTitle1"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:text="@string/my_shift_content_title_1"
+                android:textColor="@color/colorSecondary"
+                android:textSize="18sp"
+                android:textStyle="bold" />
+
+
+            <TextView
+                android:id="@+id/homePageContentBody1"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:text="@string/my_shift_content_body_1" />
+
+            </LinearLayout>
+
+        </ScrollView>
+
+    </android.support.constraint.ConstraintLayout>
+
+
+    <android.support.constraint.ConstraintLayout
+        android:id="@+id/driverShiftBody"
+        android:layout_width="match_parent"
+        android:layout_height="0dp"
+        app:layout_constraintTop_toBottomOf="@id/subContentTitle"
+        app:layout_constraintBottom_toBottomOf="parent">
+
+        <ImageView
+            android:id="@+id/searchBackgroundImage"
+            android:layout_width="0dp"
+            android:layout_height="70dp"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toTopOf="parent"
+            app:srcCompat="@color/colorPrimary" />
+
+        <EditText
+            android:id="@+id/searchText"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_marginBottom="16dp"
+            android:layout_marginEnd="10dp"
+            android:layout_marginStart="10dp"
+            android:layout_marginTop="16dp"
+            android:background="@drawable/bg_rounded_white"
+
+            android:ems="10"
+            android:hint="Enter bus number"
+            android:inputType="number"
+            android:paddingBottom="6dp"
+            android:paddingLeft="5dp"
+            android:paddingTop="6dp"
+            android:textColor="@color/colorDefaultText"
+            android:textSize="14sp"
+            app:layout_constraintBottom_toBottomOf="@+id/searchBackgroundImage"
+            app:layout_constraintEnd_toStartOf="@+id/searchIconImage"
+            app:layout_constraintStart_toStartOf="@+id/searchBackgroundImage"
+            app:layout_constraintTop_toTopOf="@+id/searchBackgroundImage" />
+
+        <ImageView
+            android:id="@+id/searchIconImage"
+            android:layout_width="30dp"
+            android:layout_height="30dp"
+            android:layout_marginBottom="8dp"
+            android:layout_marginEnd="10dp"
+            android:layout_marginTop="8dp"
+            app:layout_constraintBottom_toBottomOf="@+id/searchBackgroundImage"
+            app:layout_constraintEnd_toEndOf="@+id/searchBackgroundImage"
+            app:layout_constraintTop_toTopOf="@+id/searchBackgroundImage"
+            app:srcCompat="@drawable/icon_search" />
+
+        <android.support.v7.widget.RecyclerView
+            android:id="@+id/searchRecyclerView"
+            android:layout_width="0dp"
+            android:layout_height="0dp"
+            app:layout_constraintBottom_toBottomOf="parent"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toBottomOf="@+id/searchBackgroundImage" >
+
+        </android.support.v7.widget.RecyclerView>
+
+        <ImageView
+            android:id="@+id/notFoundPromptImage"
+            android:layout_width="200dp"
+            android:layout_height="200dp"
+            app:layout_constraintBottom_toBottomOf="parent"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toBottomOf="@id/searchBackgroundImage"
+            app:srcCompat="@drawable/notfound_prompt" />
+
+        <ProgressBar
+            android:id="@+id/progressBar"
+            style="?android:attr/progressBarStyle"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:indeterminateTint="@color/colorPrimary"
+            android:indeterminateTintMode="src_in"
+            app:layout_constraintBottom_toBottomOf="parent"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toBottomOf="@id/searchBackgroundImage" />
+
+    </android.support.constraint.ConstraintLayout>
 
 </android.support.constraint.ConstraintLayout>

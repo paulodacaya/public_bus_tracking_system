@@ -7,6 +7,7 @@ import android.net.ConnectivityManager;
 import android.net.NetworkInfo;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
+import android.support.constraint.ConstraintLayout;
 import android.support.v4.content.ContextCompat;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
@@ -32,6 +33,7 @@ import com.paulodacaya.bustrackingsystem.adapters.SearchAdapter;
 import com.paulodacaya.bustrackingsystem.timetable.Route;
 import com.paulodacaya.bustrackingsystem.timetable.Search;
 import com.paulodacaya.bustrackingsystem.timetable.Timetable;
+import com.paulodacaya.bustrackingsystem.ui.fragments.AlertDialogFragment;
 
 import org.json.JSONArray;
 import org.json.JSONException;
@@ -41,6 +43,7 @@ import java.io.IOException;
 import java.security.InvalidKeyException;
 import java.security.NoSuchAlgorithmException;
 
+import butterknife.BindColor;
 import butterknife.BindView;
 import butterknife.ButterKnife;
 import butterknife.OnClick;
@@ -56,22 +59,25 @@ public class DriverNavigationActivity extends AppCompatActivity
   @BindView( R.id.toolbar ) Toolbar mToolbar;
   @BindView( R.id.drawer_layout ) DrawerLayout mDrawerLayout;
   @BindView( R.id.nav_view ) NavigationView mNavigationView;
+  
   @BindView( R.id.contentTitle ) TextView mContentTitle;
   @BindView( R.id.subContentTitle ) TextView mSubContentTitle;
-  @BindView( R.id.homePageContent ) LinearLayout mHomePageContent;
-  @BindView( R.id.infoPromptImage ) ImageView mInfoPromptImage;
   @BindView( R.id.notFoundPromptImage ) ImageView mNotFoundPromptImage;
   @BindView( R.id.progressBar ) ProgressBar mProgressBar;
-
+  @BindView( R.id.driverHomeBody ) ConstraintLayout mDriverHomeBody;
+  @BindView( R.id.driverShiftBody ) ConstraintLayout mDriverShiftBody;
+  
+  @BindColor( R.color.colorDefaultText ) int defaultText;
+  @BindColor( R.color.colorPrimary ) int primary;
+  @BindColor( R.color.colorAccent ) int accent;
+  @BindColor( R.color.colorAccentDark ) int accentDark;
+  
   @BindView( R.id.searchRecyclerView ) RecyclerView mSearchRecyclerView;
-
-  // search sections
-  @BindView( R.id.searchBackgroundImage ) ImageView mSearchBackgroundImage;
   @BindView( R.id.searchText ) EditText mSearchText;
-  @BindView( R.id.searchIconImage ) ImageView mSearchIconImage;
 
+  
 
-  public static final String TAG = DriverNavigationActivity.class.getSimpleName(); //generate TAG
+  public static final String TAG = DriverNavigationActivity.class.getSimpleName();
 
   private Search mSearch;
 
@@ -89,16 +95,14 @@ public class DriverNavigationActivity extends AppCompatActivity
     toggle.syncState();
 
     mNavigationView.setNavigationItemSelectedListener(this);
-
-    //------------------------------------------------------------------------------------------
-    // TODO: FIX PADDING ISSUE WITH PBT LOGO
+    
+    // Action bar icon
     android.support.v7.app.ActionBar actionBar = getSupportActionBar();
     actionBar.setIcon( R.drawable.pbt_logo_letters_white_small );
     actionBar.setTitle( "" );
-    //------------------------------------------------------------------------------------------
-
-    mProgressBar.setVisibility( View.INVISIBLE ); // set initial state of Progress bar
-    toggleContent( R.id.nav_home ); // toggle to home content display
+  
+    // Toggle to home content display
+    toggleContent( R.id.nav_home );
   }
 
   @Override
@@ -111,28 +115,6 @@ public class DriverNavigationActivity extends AppCompatActivity
   }
 
   @Override
-  public boolean onCreateOptionsMenu(Menu menu) {
-    // Inflate the menu; this adds items to the action bar if it is present.
-    getMenuInflater().inflate(R.menu.driver_navigation, menu);
-    return true;
-  }
-
-  @Override
-  public boolean onOptionsItemSelected(MenuItem item) {
-    // Handle action bar item clicks here. The action bar will
-    // automatically handle clicks on the Home/Up button, so long
-    // as you specify a parent activity in AndroidManifest.xml.
-    int id = item.getItemId();
-
-    //noinspection SimplifiableIfStatement
-    if (id == R.id.action_settings) {
-      return true;
-    }
-
-    return super.onOptionsItemSelected(item);
-  }
-
-  @Override
   public boolean onNavigationItemSelected(MenuItem item) {
     int id = item.getItemId();
 
@@ -142,12 +124,9 @@ public class DriverNavigationActivity extends AppCompatActivity
     } else if (id == R.id.nav_my_shift) {
       toggleContent( R.id.nav_my_shift );
 
-    } else if (id == R.id.nav_account) {
-      toggleContent( R.id.nav_account );
-
     } else if (id == R.id.nav_exit) {
       startActivity( new Intent( DriverNavigationActivity.this, AuthenticationActivity.class ));
-      finish(); // remove activity from stack
+      finish();
     }
 
     mDrawerLayout.closeDrawer(GravityCompat.START);
@@ -155,61 +134,36 @@ public class DriverNavigationActivity extends AppCompatActivity
   }
 
   private void toggleContent( int id ) {
-    // toggle content depending on what was tab was clicked
+    
     switch (id) {
       case R.id.nav_home:
         mContentTitle.setText( R.string.content_title_home_page );
+        mContentTitle.setTextColor( defaultText );
+        mContentTitle.setBackgroundColor( accentDark );
+        
         mSubContentTitle.setText( R.string.content_sub_title_home_page );
-        mContentTitle.setBackgroundResource( R.color.colorAccentDark );
-        mSubContentTitle.setBackgroundResource( R.color.colorAccentLight );
-        mContentTitle.setTextColor( ContextCompat.getColor( getApplicationContext(), R.color.colorDefaultText) );
-        mSubContentTitle.setTextColor( ContextCompat.getColor( getApplicationContext(), R.color.colorAccentDark) );
+        mSubContentTitle.setTextColor( accentDark );
+        mSubContentTitle.setBackgroundColor( accent );
 
-        mHomePageContent.setVisibility( View.VISIBLE );
-        mInfoPromptImage.setVisibility( View.VISIBLE );
-        mSearchRecyclerView.setVisibility( View.INVISIBLE );
-
-        mSearchBackgroundImage.setVisibility( View.INVISIBLE );
-        mSearchText.setVisibility( View.INVISIBLE );
-        mSearchIconImage.setVisibility( View.INVISIBLE );
-        mNotFoundPromptImage.setVisibility( View.INVISIBLE );
+        mDriverHomeBody.setVisibility( View.VISIBLE );
+        mDriverShiftBody.setVisibility( View.INVISIBLE );
         break;
 
       case R.id.nav_my_shift:
         mContentTitle.setText( R.string.content_title_my_shift );
+        mContentTitle.setTextColor( accent );
+        mContentTitle.setBackgroundColor( primary );
+        
         mSubContentTitle.setText( R.string.content_sub_title_my_shift );
-        mContentTitle.setBackgroundResource( R.color.colorPrimary );
-        mSubContentTitle.setBackgroundResource( R.color.colorPrimary );
-        mContentTitle.setTextColor( Color.WHITE );
-        mSubContentTitle.setTextColor( Color.WHITE );
-
-        mSearchBackgroundImage.setVisibility( View.VISIBLE );
-        mSearchText.setVisibility( View.VISIBLE );
-        mSearchIconImage.setVisibility( View.VISIBLE );
-        mSearchRecyclerView.setVisibility( View.VISIBLE );
-
-        mHomePageContent.setVisibility( View.INVISIBLE );
-        mInfoPromptImage.setVisibility( View.INVISIBLE );
+        mSubContentTitle.setTextColor( accent );
+        mSubContentTitle.setBackgroundColor( primary );
+        
+        mProgressBar.setVisibility( View.INVISIBLE );
         mNotFoundPromptImage.setVisibility( View.INVISIBLE );
+  
+        mDriverHomeBody.setVisibility( View.INVISIBLE );
+        mDriverShiftBody.setVisibility( View.VISIBLE );
         break;
-
-      case R.id.nav_account:
-        mContentTitle.setText( R.string.content_title_my_account );
-        mSubContentTitle.setText( R.string.content_sub_title_my_account );
-        mContentTitle.setBackgroundResource( R.color.colorAccentDark );
-        mSubContentTitle.setBackgroundResource( R.color.colorAccentLight );
-        mContentTitle.setTextColor( ContextCompat.getColor( getApplicationContext(), R.color.colorDefaultText) );
-        mSubContentTitle.setTextColor( ContextCompat.getColor( getApplicationContext(), R.color.colorAccentDark) );
-
-        mSearchBackgroundImage.setVisibility( View.INVISIBLE );
-        mSearchText.setVisibility( View.INVISIBLE );
-        mSearchIconImage.setVisibility( View.INVISIBLE );
-        mHomePageContent.setVisibility( View.INVISIBLE );
-        mSearchRecyclerView.setVisibility( View.INVISIBLE );
-        mInfoPromptImage.setVisibility( View.INVISIBLE );
-        mNotFoundPromptImage.setVisibility( View.INVISIBLE );
-        break;
-
     }
   }
 
@@ -348,7 +302,7 @@ public class DriverNavigationActivity extends AppCompatActivity
         }
       });
 
-      return null; // return an null object, nothing found on search object (empty JSON array)
+      return null;
 
     } else {
 
@@ -380,31 +334,22 @@ public class DriverNavigationActivity extends AppCompatActivity
   }
 
   private void updateSearchList() {
-
-    // check if the object doesn't return null
     if( mSearch.getRoutes() != null ) {
-
       SearchAdapter adapter = new SearchAdapter( this, mSearch.getRoutes() );
       mSearchRecyclerView.setAdapter( adapter );
       RecyclerView.LayoutManager layoutManager = new LinearLayoutManager( this );
       mSearchRecyclerView.setLayoutManager( layoutManager );
-      mSearchRecyclerView.setHasFixedSize( true ); // recommended to increase performance
+      mSearchRecyclerView.setHasFixedSize( true );
     }
   }
 
   private boolean isNetworkAvailable() {
-
-    // create manager
+    
     ConnectivityManager manager = (ConnectivityManager)
             getSystemService(Context.CONNECTIVITY_SERVICE );
-
-    // network info object, this needs permissions to be successful ( Manifest ).
     NetworkInfo networkInfo = manager.getActiveNetworkInfo();
 
     boolean isAvailable = false;
-
-    // check if networkInfo has been assigned by checking null state
-    // and if it is actually connected to the web
     if( networkInfo != null && networkInfo.isConnected() )
       isAvailable = true;
 
@@ -412,10 +357,7 @@ public class DriverNavigationActivity extends AppCompatActivity
   }
 
   private void alertUserAboutError() {
-    AlertDialogFragment dialog = new AlertDialogFragment(); // instantiate AlertDialogFragment
-    dialog.show( getFragmentManager(), "error_dialog" ); // display it
+    AlertDialogFragment dialog = new AlertDialogFragment();
+    dialog.show( getFragmentManager(), "error_dialog" );
   }
-
-
-
 }

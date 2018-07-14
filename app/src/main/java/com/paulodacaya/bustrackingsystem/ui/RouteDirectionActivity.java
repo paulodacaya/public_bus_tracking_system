@@ -18,6 +18,7 @@ import com.paulodacaya.bustrackingsystem.adapters.DirectionAdapter;
 import com.paulodacaya.bustrackingsystem.timetable.Direction;
 import com.paulodacaya.bustrackingsystem.timetable.Directions;
 import com.paulodacaya.bustrackingsystem.timetable.Timetable;
+import com.paulodacaya.bustrackingsystem.ui.fragments.AlertDialogFragment;
 import com.paulodacaya.bustrackingsystem.utilities.Constants;
 
 import org.json.JSONArray;

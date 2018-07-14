@@ -6,8 +6,9 @@ import android.content.pm.ActivityInfo;
 import android.os.Bundle;
 
 /**
+ * This class is used to set entire application to portrait mode
  * This execute whenever any activity in your app is started (or stopped, or resumed, or whatever)
- * so it's a good place to set all activity to PORTRAIT mode. One place to rule them all.
+ * so it's a good place to set all activity to PORTRAIT mode.
  * This class is set in the AndroidManifest.xml under root application.
  */
 

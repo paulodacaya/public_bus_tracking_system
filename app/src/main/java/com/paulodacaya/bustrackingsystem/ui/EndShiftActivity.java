@@ -49,6 +49,6 @@ public class EndShiftActivity extends AppCompatActivity {
   @OnClick ( R.id.returnHomeButton )
   public void returnToDriverNavigationActivity() {
     startActivity( new Intent( EndShiftActivity.this, DriverNavigationActivity.class ) );
-    finish(); // remove activity from stack
+    finish();
   }
 }

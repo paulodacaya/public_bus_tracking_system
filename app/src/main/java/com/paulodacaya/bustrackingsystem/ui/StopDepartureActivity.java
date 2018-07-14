@@ -19,6 +19,7 @@ import com.paulodacaya.bustrackingsystem.adapters.DepartureAdapter;
 import com.paulodacaya.bustrackingsystem.timetable.Departure;
 import com.paulodacaya.bustrackingsystem.timetable.Departures;
 import com.paulodacaya.bustrackingsystem.timetable.Timetable;
+import com.paulodacaya.bustrackingsystem.ui.fragments.AlertDialogFragment;
 import com.paulodacaya.bustrackingsystem.utilities.Constants;
 
 import org.json.JSONArray;

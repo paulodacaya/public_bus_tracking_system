@@ -49,7 +49,12 @@
         <b>3.</b> You will be directed to the map interface, your location will be tracked during your shift for easy use.\n\n
         <b>4.</b> <i>YOUR ROLE:</i> Once you are stationary at a bus stop, please press the marker corresponding to the bus stop you are at. Only need to press once. A notification will prompt a successful act.\n\n
         <b>5.</b> Once finished, or changing route direction, you may \'end-shift\'.\n\n
-        <b>6.</b> Drive safely.
+        <b>6.</b> Drive safely.\n\n
+        <b>NOTE:</b> The number value that\'s updated when a marker is click represents the difference between arrival and scheduled time, shown as minutes:seconds.\n
+        <b>Negative value</b> = earlier then scheduled.\n
+        <b>Positive value</b> = later then scheduled.\n
+        <b>Green color</b> = on-time.\n
+        <b>Red color</b> = not on-time.\n
     </string>
 
     <string name="analysis_content_title_1">Analysis</string>

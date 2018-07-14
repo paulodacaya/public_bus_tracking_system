@@ -11,6 +11,7 @@ import android.net.ConnectivityManager;
 import android.net.NetworkInfo;
 import android.os.Bundle;
 import android.support.annotation.NonNull;
+import android.support.constraint.ConstraintLayout;
 import android.support.v4.app.ActivityCompat;
 import android.support.v4.content.ContextCompat;
 import android.support.v7.widget.LinearLayoutManager;
@@ -22,7 +23,6 @@ import android.support.v4.widget.DrawerLayout;
 import android.support.v7.app.ActionBarDrawerToggle;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
-import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
 import android.widget.ImageView;
@@ -36,6 +36,7 @@ import com.paulodacaya.bustrackingsystem.adapters.StopAdapter;
 import com.paulodacaya.bustrackingsystem.timetable.Stop;
 import com.paulodacaya.bustrackingsystem.timetable.Stops;
 import com.paulodacaya.bustrackingsystem.timetable.Timetable;
+import com.paulodacaya.bustrackingsystem.ui.fragments.AlertDialogFragment;
 
 import org.json.JSONArray;
 import org.json.JSONException;
@@ -58,16 +59,20 @@ public class UserNavigationActivity extends AppCompatActivity implements Navigat
   @BindView( R.id.toolbar ) Toolbar mToolbar;
   @BindView( R.id.drawer_layout ) DrawerLayout mDrawerLayout;
   @BindView( R.id.nav_view ) NavigationView mNavigationView;
+  
   @BindView( R.id.contentTitle ) TextView mContentTitle;
   @BindView( R.id.subContentTitle ) TextView mSubContentTitle;
-  @BindView( R.id.infoPromptImage ) ImageView mInfoPromptImage;
+  
   @BindView( R.id.outOfProximityPrompt ) ImageView mOutOfProximityPrompt;
   @BindView( R.id.progressBar ) ProgressBar mProgressBar;
+  
+  @BindView( R.id.userHomeBody ) ConstraintLayout mHomeBody;
+  @BindView( R.id.userTimetableInfoBody ) ConstraintLayout mTimetableInfoBody;
 
   @BindView( R.id.stopsDistanceRecyclerView ) RecyclerView mStopsDistanceRecyclerView;
-  @BindView( R.id.homePageContent ) LinearLayout mHomePageContent;
-
-  public static final String TAG = UserNavigationActivity.class.getSimpleName(); //generate TAG
+  
+  // Debugging TAG
+  public static final String TAG = UserNavigationActivity.class.getSimpleName();
 
   private LocationManager mLocationManager;   // used to manage location
   private LocationListener mLocationListener; // handle location events
@@ -90,14 +95,13 @@ public class UserNavigationActivity extends AppCompatActivity implements Navigat
     mDrawerLayout.addDrawerListener(toggle);
     toggle.syncState();
 
-    mNavigationView.setNavigationItemSelectedListener(this); // register Navigation
+    mNavigationView.setNavigationItemSelectedListener(this);
 
     //------------------------------------------------------------------------------------------
-    // TODO: FIX PADDING ISSUE WITH PBT LOGO
+    // Action Bar Icon
     android.support.v7.app.ActionBar actionBar = getSupportActionBar();
     actionBar.setIcon( R.drawable.pbt_logo_letters_white_small );
     actionBar.setDisplayShowTitleEnabled( false );
-
     //------------------------------------------------------------------------------------------
 
     toggleContent( R.id.nav_home ); // toggle to home content
@@ -174,28 +178,6 @@ public class UserNavigationActivity extends AppCompatActivity implements Navigat
   }
 
   @Override
-  public boolean onCreateOptionsMenu(Menu menu) {
-    // Inflate the menu; this adds items to the action bar if it is present.
-    getMenuInflater().inflate(R.menu.user_navigation, menu);
-    return true;
-  }
-
-  @Override
-  public boolean onOptionsItemSelected(MenuItem item) {
-    // Handle action bar item clicks here. The action bar will
-    // automatically handle clicks on the Home/Up button, so long
-    // as you specify a parent activity in AndroidManifest.xml.
-    int id = item.getItemId();
-
-    //noinspection SimplifiableIfStatement
-    if (id == R.id.action_settings) {
-      return true;
-    }
-
-    return super.onOptionsItemSelected(item);
-  }
-
-  @Override
   public boolean onNavigationItemSelected(MenuItem item) {
     // Handle navigation view item clicks here.
     int id = item.getItemId();
@@ -224,10 +206,6 @@ public class UserNavigationActivity extends AppCompatActivity implements Navigat
       toggleContent( R.id.nav_real_time );
 
     }
-    else if (id == R.id.nav_account) {
-      toggleContent( R.id.nav_account );
-
-    }
     else if (id == R.id.nav_exit) {
       startActivity( new Intent( UserNavigationActivity.this, AuthenticationActivity.class ));
       finish(); // close activity
@@ -244,45 +222,26 @@ public class UserNavigationActivity extends AppCompatActivity implements Navigat
         mContentTitle.setText( R.string.content_title_home_page );
         mSubContentTitle.setText( R.string.content_sub_title_home_page );
 
-        mHomePageContent.setVisibility( View.VISIBLE );
-        mInfoPromptImage.setVisibility( View.VISIBLE );
-
-        mStopsDistanceRecyclerView.setVisibility( View.INVISIBLE );
-        mProgressBar.setVisibility( View.INVISIBLE );
-        mOutOfProximityPrompt.setVisibility( View.INVISIBLE );
+        mHomeBody.setVisibility( View.VISIBLE );
+        mTimetableInfoBody.setVisibility( View.INVISIBLE );
         break;
 
       case R.id.nav_timetable_information:
         mContentTitle.setText( R.string.content_title_timetable_information );
         mSubContentTitle.setText( R.string.content_sub_title_timetable_information );
-
-        mStopsDistanceRecyclerView.setVisibility( View.VISIBLE );
-        mHomePageContent.setVisibility( View.INVISIBLE );
-        mInfoPromptImage.setVisibility( View.INVISIBLE );
-        mOutOfProximityPrompt.setVisibility( View.INVISIBLE );
+  
+        mHomeBody.setVisibility( View.INVISIBLE );
+        mTimetableInfoBody.setVisibility( View.VISIBLE );
         mProgressBar.setVisibility( View.INVISIBLE );
+        mOutOfProximityPrompt.setVisibility( View.INVISIBLE );
         break;
 
       case R.id.nav_real_time:
         mContentTitle.setText( R.string.content_title_real_time  );
         mSubContentTitle.setText( R.string.content_sub_title_real_time );
-
-        mStopsDistanceRecyclerView.setVisibility( View.INVISIBLE );
-        mHomePageContent.setVisibility( View.INVISIBLE );
-        mInfoPromptImage.setVisibility( View.INVISIBLE );
-        mOutOfProximityPrompt.setVisibility( View.INVISIBLE );
-        mProgressBar.setVisibility( View.INVISIBLE );
-        break;
-
-      case R.id.nav_account:
-        mContentTitle.setText( R.string.content_title_my_account );
-        mSubContentTitle.setText( R.string.content_sub_title_my_account );
-
-        mStopsDistanceRecyclerView.setVisibility( View.INVISIBLE );
-        mHomePageContent.setVisibility( View.INVISIBLE );
-        mInfoPromptImage.setVisibility( View.INVISIBLE );
-        mOutOfProximityPrompt.setVisibility( View.INVISIBLE );
-        mProgressBar.setVisibility( View.INVISIBLE );
+  
+        mHomeBody.setVisibility( View.INVISIBLE );
+        mTimetableInfoBody.setVisibility( View.INVISIBLE );
         break;
     }
   }
@@ -303,21 +262,21 @@ public class UserNavigationActivity extends AppCompatActivity implements Navigat
 
   private void getNearbyStops( double latitude, double longitude ) throws Exception {
 
-    // create SIGNED URL (PTV specifications)
+    // Create SIGNED URL (PTV specifications)
     Timetable timetable = new Timetable();
     timetable.setNearLocationUri( latitude, longitude );
-    String timetableUrl = timetable.buildTTAPIURL();        // get appropriate URL
-
-
+    String timetableUrl = timetable.buildTTAPIURL();
+    
     if( isNetworkAvailable() ) {
 
       toggleProgressBar();
+      
+      OkHttpClient client = new OkHttpClient();
+      // Build a request that the client will send to the server
+      Request request = new Request.Builder().url(timetableUrl).build();
+      Call call = client.newCall(request);
 
-      OkHttpClient client = new OkHttpClient(); // use Third Party
-      Request request = new Request.Builder().url(timetableUrl).build(); // build a request that the client will send to the server
-      Call call = client.newCall(request); // After building the request, put it into the call object
-
-      //execute method on the call class that will return a response object
+      // Execute on Thread
       call.enqueue(new Callback() {
         @Override
         public void onFailure(Call call, IOException e) {
@@ -329,14 +288,13 @@ public class UserNavigationActivity extends AppCompatActivity implements Navigat
             }
           });
 
-          alertUserAboutError(); // alert dialog
+          alertUserAboutError();
         }
 
         @Override
         public void onResponse(Call call, Response response) {
           try {
-            String jsonData = response.body().string(); //get JSON object
-            Log.v(TAG, jsonData);
+            String jsonData = response.body().string();
 
             if (response.isSuccessful()) {
 
@@ -347,7 +305,7 @@ public class UserNavigationActivity extends AppCompatActivity implements Navigat
                 }
               });
 
-              mStops = parseStopsDetails(jsonData); // parse JSON object from API :)
+              mStops = parseStopsDetails(jsonData);
 
               // run on MAIN UI THREAD
               runOnUiThread(new Runnable() {
@@ -376,10 +334,9 @@ public class UserNavigationActivity extends AppCompatActivity implements Navigat
   private Stops parseStopsDetails( String jsonData ) throws JSONException {
 
     Stops stops = new Stops();
-
     stops.setStops( getStop( jsonData ) );
 
-    return stops; //return object with complete object with parsed data from API :)
+    return stops; //return object with complete object with parsed data from API
   }
 
   private Stop[] getStop( String jsonData ) throws JSONException {
@@ -387,7 +344,8 @@ public class UserNavigationActivity extends AppCompatActivity implements Navigat
     JSONObject stopsRootObject = new JSONObject( jsonData );
     JSONArray stopsArray = stopsRootObject.getJSONArray( "stops" );
 
-    // if there is no objects stored in the array, display 'no bus stop proximity image'
+    // If there is no objects stored in the array,
+    // meaning there is not bus stops in proximity of 1km. Display 'no bus stop proximity image'.
     if( stopsArray.length() == 0 ) {
 
       runOnUiThread(new Runnable() {
@@ -409,13 +367,13 @@ public class UserNavigationActivity extends AppCompatActivity implements Navigat
           mStopsDistanceRecyclerView.setVisibility( View.VISIBLE );
         }
       });
-
-      Stop[] stops = new Stop[ stopsArray.length() ]; //create object array of Stop Objects
-
-      // fill array
+  
+      // Create object array of Stop Objects
+      Stop[] stops = new Stop[ stopsArray.length() ];
+      
       for(int i = 0; i < stopsArray.length(); i++ ) {
 
-        JSONObject jsonStop = stopsArray.getJSONObject( i ); //loop through each json Object
+        JSONObject jsonStop = stopsArray.getJSONObject( i );
         Stop stop = new Stop();
 
         stop.setStopDistance( jsonStop.getDouble( "stop_distance" ) );
@@ -423,8 +381,9 @@ public class UserNavigationActivity extends AppCompatActivity implements Navigat
         stop.setStopId( jsonStop.getInt( "stop_id" ));
         stop.setStopLatitude( jsonStop.getDouble( "stop_latitude" ));
         stop.setStopLongitude( jsonStop.getDouble( "stop_longitude" ));
-
-        stops[i] = stop; // set Stop Object into Stops[] Array of Objects :)
+  
+        // set Stop Object into Stops[] Array of Objects
+        stops[i] = stop;
       }
 
       return stops;
@@ -436,7 +395,7 @@ public class UserNavigationActivity extends AppCompatActivity implements Navigat
     if( mStops.getStops() != null ) {
 
       StopAdapter adapter = new StopAdapter(this, mStops.getStops()); // make build adapter
-      mStopsDistanceRecyclerView.setAdapter(adapter);                  // set adapter
+      mStopsDistanceRecyclerView.setAdapter(adapter);                         // set adapter
       RecyclerView.LayoutManager layoutManager = new LinearLayoutManager(this);
       mStopsDistanceRecyclerView.setLayoutManager(layoutManager);
       mStopsDistanceRecyclerView.setHasFixedSize(true); // recommended to increase performance
